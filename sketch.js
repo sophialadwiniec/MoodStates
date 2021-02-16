@@ -33,6 +33,17 @@
 
 // Array of images
 var images = [];
+// Array of functions
+var functions = []; 
+// Array of instructions 
+var instructions = []; 
+// Array of colors 
+var colors = []; 
+
+// variables used for instructions 
+var midX; 
+var startY;
+var lineHeight = 48;
 
 // variable that is a function 
 var drawFunction;
@@ -47,11 +58,50 @@ function preload() {
   images[2] = loadImage('assets/happy.png');
   images[3] = loadImage('assets/sad.png');
   images[4] = loadImage('assets/scared.png');
+  images[5] = loadImage('assets/splash.png');
+}
+
+function loadFunctionsArray() {
+  functions[0] = drawOne; 
+  functions[1] = drawTwo; 
+  functions[2] = drawThree; 
+  functions[3] = drawFour; 
+  functions[4] = drawFive; 
+  functions[5] = drawSplash; 
+  functions[6] = drawInstructions; 
+}
+
+function loadInstructionsArray() {
+  instructions[0] = "Press 1 for Angry!"; 
+  instructions[1] = "Press 2 for Calm"; 
+  instructions[2] = "Press 3 for Happy :)"; 
+  instructions[3] = "Press 4 for Sad :(";
+  instructions[4] = "Press 5 for Scared"
+  instructions[5] = "Press s for a splash of bubbles!"; 
+  instructions[6] = "When on the bubble screen click to get the instructions screen or press i"; 
+}
+
+
+function loadColors() {
+  colors[0] = "#FF0000"; 
+  colors[1] = "#008000"; 
+  colors[2] = "#FFFF00"; 
+  colors[3] = "#0000FF";
+  colors[4] = "#800080"; 
+  colors[5] = "#4169e1"; 
+  colors[6] = "#ae0700"; 
 }
 
 // Center drawing, drawFunction will be one for default
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  // loading all arrays 
+  loadFunctionsArray(); 
+  loadInstructionsArray(); 
+  loadColors(); 
+
+  midX = width/2;
+  startY = 60;
 
   // Center our drawing objects
   imageMode(CENTER);
@@ -59,7 +109,7 @@ function setup() {
   textSize(24);
 
   // set to one for startup
-  drawFunction = drawOne;
+  drawFunction = functions[5];
 }
 
 // Very simple, sets the background color and calls your state machine function
@@ -76,7 +126,7 @@ function draw() {
 drawOne = function() {
    image(images[0],width/2, height/2);
 
-   fill("#FF0000");
+   fill(colors[0]);
    text("Angry", width/2, height - gTextOffset);
 }
 
@@ -84,7 +134,7 @@ drawOne = function() {
 drawTwo = function() {
    image(images[1],width/2, height/2);
 
-   fill("#008000");
+   fill(colors[1]);
    text("Calm", width/2, height - gTextOffset);
 }
 
@@ -92,7 +142,7 @@ drawTwo = function() {
 drawThree = function() {
    image(images[2],width/2, height/2);
 
-   fill("#FFFF00");
+   fill(colors[2]);
    text("Happy", width/2, height - gTextOffset);
 }
 
@@ -100,7 +150,7 @@ drawThree = function() {
 drawFour = function() {
    image(images[3],width/2, height/2);
 
-   fill("#0000FF");
+   fill(colors[3]);
    text("Sad", width/2, height - gTextOffset);
 }
 
@@ -108,28 +158,52 @@ drawFour = function() {
 drawFive = function() {
    image(images[4],width/2, height/2);
 
-   fill("#800080");
+   fill(colors[4]);
    text("Scared", width/2, height - gTextOffset);
 }
 
+drawSplash = function() {
+   image(images[5],width/2, height/2);
+   
+}
+
+drawInstructions = function() {
+  for( let i = 0; i < instructions.length; i++ ) {
+    fill(colors[i]); 
+    text( instructions[i], midX, startY + (i * lineHeight) )
+  }
+}
 
 //========= TEMPLATE: add or change interface functions, as you like =========
 
 // Change the drawFunction variable based on your interaction
 function keyTyped() {
   if( key === '1' ) {
-  	drawFunction = drawOne;
+  	drawFunction = functions[0];
   }
   else if( key === '2' ) {
-  	drawFunction = drawTwo;
+  	drawFunction = functions[1];
   }
   else if( key === '3' ) {
-  	drawFunction = drawThree;
+  	drawFunction = functions[2];
   }
   else if( key === '4' ) {
-  	drawFunction = drawFour;
+  	drawFunction = functions[3];
   }
   else if( key === '5' ) {
-  	drawFunction = drawFive;
+  	drawFunction = functions[4];
+  }
+  else if( key == 's') {
+    drawFunction = functions[5]; 
+  }
+  else if( key == 'i') {
+    drawFunction = functions[6]; 
+  }
+}
+
+function mousePressed() {
+  // only change state if we are in splash screen
+  if( drawFunction === drawSplash ) {
+    drawFunction = functions[6];
   }
 }
